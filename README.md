@@ -48,6 +48,7 @@ SSD: 512Gb Toshiba M.2 2280 THNSN5512GPUK
 ```
 
 The benchmark is the following:
+
 | Size  | Batch size | Time |
 | ------------- | ------------- | ------------- |
 | 100M (100K lines) | 1K | 35s |
