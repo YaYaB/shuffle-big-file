@@ -83,9 +83,9 @@ def shuffle(input_file, output_file, idx_shuffled, nb_read, batch_size):
     """
         :param input_file: path file that will be created
         :param output_file: number of lines wanted
-        :param idx_shuffled: maximum number of characters per line
-        :param nb_read: maximum number of characters per line
-        :param batch_size: maximum number of characters per line
+        :param idx_shuffled: index shuffled
+        :param nb_read: number of read necessary
+        :param batch_size: batch size used
 
     """
     with open(output_file, 'a') as f:
