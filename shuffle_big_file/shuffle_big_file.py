@@ -5,6 +5,8 @@ import random
 import argparse
 import sys
 
+RANDOM_SEED = 1337
+
 
 def get_args():
     parser = argparse.ArgumentParser(
@@ -13,6 +15,7 @@ def get_args():
     parser.add_argument("--input_file", type=str, help="Path to input file")
     parser.add_argument("--batch_size", type=int, help="Batch size that can fit in memory")
     parser.add_argument("--output_file", type=str, help="Path to output shuffled file")
+    parser.add_argument("--seed", type=int, help="Seed for random generator", default=RANDOM_SEED)
 
     args = parser.parse_args()
     return args
@@ -121,23 +124,22 @@ def shuffle(input_file, output_file, idx_shuffled, nb_read, batch_size):
             print('[INFO]', nb_read - (i+1), 'read are left. It will take', str(timedelta(seconds=(nb_read - (i+1)) * (datetime.now() - startTime).total_seconds())))
 
 
-def main():
+def shuffle_big_file(input_file, output_file, batch_size, seed=RANDOM_SEED):
     """
-        Main function of the program
+        :param input_file: path of the inputfile
+        :param batch_size: batch size used
+        :param output_file: path of the output file
+        :param seed: seed for the random generator
     """
 
-    # Get arguments passed in CLI
-    opt = get_args()
-    batch_size = opt.batch_size
-    input_file = opt.input_file
-    output_file = opt.output_file
+    assert os.path.exists(input_file)
+    assert not os.path.exists(output_file)
 
-    assert os.path.exists(opt.input_file)
-    assert not os.path.exists(opt.output_file)
+    random.seed(seed)
 
     # Compute number of read necessary
     startTime_ = datetime.now()
-    nb_read, nb_lines = compute_nb_read(opt.input_file, opt.batch_size)
+    nb_read, nb_lines = compute_nb_read(input_file, batch_size)
     one_read = datetime.now() - startTime_
 
     print('[INFO] File was read in', str(one_read))
@@ -147,15 +149,26 @@ def main():
     idx_shuffled = compute_shuffled_index(nb_lines)
     
     # Shuffle file
-    shuffle(opt.input_file, opt.output_file, idx_shuffled, nb_read, opt.batch_size)
+    shuffle(input_file, output_file, idx_shuffled, nb_read, batch_size)
     print('[INFO] File was shuffled in', str(datetime.now() - startTime_))
 
     return 0
 
 
+def shuffle_big_file_cli():
+    """
+        Main function of the program
+    """
+
+    # Get arguments passed in CLI
+    opt = get_args()
+
+    return shuffle_big_file(opt.input_file, opt.output_file, opt.batch_size, opt.seed)
+
+
 if __name__ == "__main__":
     try:
-        sys.exit(main())
+        sys.exit(shuffle_big_file_cli())
     except Exception as e:
         print("[ERR] Uncaught error waiting for scripts to finish")
         print(e)

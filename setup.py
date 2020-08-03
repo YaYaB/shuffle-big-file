@@ -25,7 +25,7 @@ setup(name='shuffle-big-file',
       packages=find_packages(),
       entry_points={
           'console_scripts': [
-              'shuffle-big-file=shuffle_big_file.shuffle_big_file:main',
+              'shuffle-big-file=shuffle_big_file.shuffle_big_file:shuffle_big_file_cli',
               'generate-random-file=shuffle_big_file.shuffle_big_file:generate_random_file_cli'
           ]},
 
